@@ -1,18 +1,37 @@
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import auth from "../firebase.config";
+import { useState } from "react";
 const Login = () => {
+    const[error, setError]=useState('');
+    const[success, setSuccess]=useState('');
     const handleLogin= e =>{
+        setError('');
+        setSuccess('');
         e.preventDefault();
-        console.log(e.target.email.value);
-        console.log(e.target.password.value);
+        const email=e.target.email.value;
+        const password=e.target.password.value;
+        if(password.length<4){
+            setError("Please set 4 digit password");
+            return;
+        }
+        createUserWithEmailAndPassword(auth,email,password)
+        .then(result=>{
+            console.log(result);
+             setSuccess("Login Successful!!!");
+        })
+        .catch(error=>{
+            console.log(error);
+            setError(error.message);
+        })
     }
     return (
         <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
+            <div className="hero-content flex-col  lg:flex-row-reverse">
+                <div className="text-center w-1/2 lg:text-left">
                     <h1 className="text-5xl font-bold">Login now!</h1>
                     <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                 </div>
-                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                <div className="card flex-shrink-0 w-1/2 max-w-sm shadow-2xl bg-base-100">
                     <div className="card-body">
                         <form onSubmit={handleLogin}>
                             <div className="form-control">
@@ -35,6 +54,10 @@ const Login = () => {
                                 {/* <button type="submit">submit</button> */}
                             </div>
                         </form>
+                        
+                            {error&& <h1 className="">{error}</h1>}
+                            {success&& <h1>{success}</h1>}
+                        
                     </div>
                 </div>
             </div>
