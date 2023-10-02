@@ -1,50 +1,48 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import auth from "../firebase.config";
-import { useState } from "react";
+
 const Login = () => {
-    const[error, setError]=useState('');
-    const[success, setSuccess]=useState('');
-    const handleLogin= e =>{
-        setError('');
-        setSuccess('');
+
+    const handleLogin = e => {
+
         e.preventDefault();
-        const email=e.target.email.value;
-        const password=e.target.password.value;
-        if(password.length<4){
-            setError("Please set 4 digit password");
-            return;
-        }
-        createUserWithEmailAndPassword(auth,email,password)
-        .then(result=>{
-            console.log(result);
-             setSuccess("Login Successful!!!");
-        })
-        .catch(error=>{
-            console.log(error);
-            setError(error.message);
-        })
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                // ...
+                console.log(user)
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage)
+            });
     }
     return (
         <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col  lg:flex-row-reverse">
-                <div className="text-center w-1/2 lg:text-left">
-                    <h1 className="text-5xl font-bold">Login now!</h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+            <div className="hero-content flex-col  ">
+                <div className="text-center  lg:text-left">
+                    <h1 className="text-2xl font-bold">Login now!</h1>
+
                 </div>
-                <div className="card flex-shrink-0 w-1/2 max-w-sm shadow-2xl bg-base-100">
+                <div className="card flex-shrink-0  max-w-sm shadow-2xl bg-base-100">
                     <div className="card-body">
                         <form onSubmit={handleLogin}>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text" >Email</span>
                                 </label>
-                                <input type="email" placeholder="email" className="input input-bordered" name="email"/>
+                                <input type="email" placeholder="email" className="input input-bordered w-64" name="email" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text" >Password</span>
                                 </label>
-                                <input type="password" placeholder="password" className="input input-bordered" name="password"/>
+                                <input type="password" placeholder="password" className="input input-bordered" name="password" />
                                 <label className="label">
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                 </label>
@@ -54,10 +52,9 @@ const Login = () => {
                                 {/* <button type="submit">submit</button> */}
                             </div>
                         </form>
-                        
-                            {error&& <h1 className="">{error}</h1>}
-                            {success&& <h1>{success}</h1>}
-                        
+
+
+
                     </div>
                 </div>
             </div>
